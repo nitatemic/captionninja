@@ -5,7 +5,6 @@
 	<meta content="utf-8" http-equiv="encoding" />
 	<meta name="copyright" content="&copy; 2020 Steve Seguin" />
 	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
-	<!-- Primary Meta Tags -->
 	<title>CAPTION.Ninja - translate</title>
 	<meta name="title" content="CAPTION.Ninja" />
 	<meta name="description" content="This is a free-to-use captioning tool for OBS. Speech-to-text is done using Machine Learning" />
@@ -442,7 +441,7 @@ The translation is powered by Google Cloud Translation, which <a href='https://c
 
 	var availableLangs = {};
 
-	var apiUrl = "http://localhost:50559/languages";
+	var libreTranslateUrl = urlParams.get("api") + "/languages" || "http://localhost:50559/languages";
 
 	fetch(apiUrl, {
 		method: 'GET',
@@ -483,7 +482,7 @@ The translation is powered by Google Cloud Translation, which <a href='https://c
 	function translate(textToTranslate) {
 		if (!document.getElementById("enabledTranscription").checked) { return; }
 
-		var libreTranslateUrl = "http://localhost:50559/translate";
+		var libreTranslateUrl = urlParams.get("api") + "/translate"  || "http://localhost:50559/translate";
 		var params = {
 			q: textToTranslate,
 			source: myLangCode,
