@@ -441,7 +441,7 @@ The translation is powered by Google Cloud Translation, which <a href='https://c
 
 	var availableLangs = {};
 
-	var apiUrl = urlParams.get("api") + "/languages" || "http://localhost:50559/languages";
+	var apiUrl = "http://" + urlParams.get("api") + "/languages" || "http://localhost:50559/languages";
 
 	fetch(apiUrl, {
 		method: 'GET',
@@ -482,7 +482,7 @@ The translation is powered by Google Cloud Translation, which <a href='https://c
 	function translate(textToTranslate) {
 		if (!document.getElementById("enabledTranscription").checked) { return; }
 
-		var libreTranslateUrl = urlParams.get("api") + "/translate"  || "http://localhost:50559/translate";
+		var libreTranslateUrl = "http://" + urlParams.get("api") + "/translate"  || "http://localhost:50559/translate";
 		var params = {
 			q: textToTranslate,
 			source: myLangCode,
