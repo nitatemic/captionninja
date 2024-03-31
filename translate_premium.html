@@ -455,7 +455,7 @@ The translation is powered by Google Cloud Translation, which <a href='https://c
 		}
 	}).then((response) => response.json()).then((data) => {
 		console.log(data);
-		var languages = data.data.languages;
+		var languages = data.data.targets;
 		languages.forEach(l=>{
 			availableLangs[l.language] = langs[l.language] || l.language;
 
