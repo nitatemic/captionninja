@@ -439,15 +439,12 @@ The translation is powered by Google Cloud Translation, which <a href='https://c
 	const langFrom = document.getElementById("lang-from");
 	const langTo = document.getElementById("lang-to");
 
+
 	var availableLangs = {};
 
-	if (apiKey){
-		var langurl = "http://localhost:5009/languages";
-	} else {
-		var langurl = "http://localhost:5009/languages";
-	}
+	var apiUrl = "http://localhost:50559/languages";
 
-	fetch(langurl, {
+	fetch(apiUrl, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
@@ -455,22 +452,23 @@ The translation is powered by Google Cloud Translation, which <a href='https://c
 		}
 	}).then((response) => response.json()).then((data) => {
 		console.log(data);
-		var languages = data.data.targets;
-		languages.forEach(l=>{
-			availableLangs[l.language] = langs[l.language] || l.language;
+		data.forEach(language => {
+			var langCode = language.code;
+			var langName = language.name;
+			availableLangs[langCode] = langName;
 
 			var option = document.createElement("option");
-			option.innerText = langs[l.language] || l.language;
-			option.value = l.language;
-			if (option.value == myLangCode){
+			option.innerText = langName;
+			option.value = langCode;
+			if (langCode == myLangCode){
 				option.selected = true;
 			}
 			langFrom.appendChild(option);
 
 			option = document.createElement("option");
-			option.innerText = langs[l.language] || l.language;
-			option.value = l.language;
-			if (option.value == targetCode){
+			option.innerText = langName;
+			option.value = langCode;
+			if (langCode == targetCode){
 				option.selected = true;
 			}
 			langTo.appendChild(option);
@@ -478,29 +476,40 @@ The translation is powered by Google Cloud Translation, which <a href='https://c
 		setup(); // sets up the translation
 	});
 
+
+
 	var counter = 0;
 
 	function translate(textToTranslate) {
-		if (!document.getElementById("enabledTranscription").checked){return;}
+		if (!document.getElementById("enabledTranscription").checked) { return; }
 
-		if (apiKey){
-			var url = "http://localhost:5009/translate" + "&q=" + encodeURI(textToTranslate) + "&target=" + targetCode + "&source=" + myLangCode;
-		} else {
-			var url = "http://localhost:5009/translate"+ "&q=" + encodeURI(textToTranslate) + "&target=" + targetCode + "&source=" + myLangCode;
-		}
+		var libreTranslateUrl = "http://localhost:50559/translate";
+		var params = {
+			q: textToTranslate,
+			source: myLangCode,
+			target: targetCode
+		};
 
-		fetch(url, {
+		fetch(libreTranslateUrl + '?' + new URLSearchParams(params), {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json'
 			}
-		}).then((response) => response.json()).then((data) => {
+		}).then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		}).then(data => {
 			console.log(data);
-			console.log(data.data.translations[0].translatedText);
-			updateTrans(data.data.translations[0].translatedText)
+			console.log(data.translatedText);
+			updateTrans(data.translatedText);
+		}).catch(error => {
+			console.error('There was a problem with the fetch operation:', error);
 		});
 	}
+
 
 
 	function updateTrans(data){
